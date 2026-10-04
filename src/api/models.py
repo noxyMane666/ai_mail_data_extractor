@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.api.enums import UrgencyType
+from src.api.enums.urgency_types import UrgencyType
 
 
 class EmailExtractRequest(BaseModel):
