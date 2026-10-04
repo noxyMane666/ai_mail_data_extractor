@@ -1,4 +1,4 @@
-from src.api.enums import UrgencyType
+from src.api.enums.urgency_types import UrgencyType
 from src.api.models import EmailExtractRequest, EmailExtractResponse
 
 
