@@ -3,10 +3,11 @@ import time
 from typing import TypeVar
 
 import httpx2
-from anthropic import AsyncAnthropic
+from anthropic import NOT_GIVEN, AsyncAnthropic
 from anthropic.types import MessageParam
 
 from src.config.app_settings import AppSettings
+from src.llm.enums.message_roles import MessageRole
 from src.llm.interfaces import LLMClient
 from src.llm.llm_message import LLLMessage
 
@@ -35,15 +36,19 @@ class AnthropicLLMClient(LLMClient):
         messages: list[LLLMessage],
         response_model: type[T] | None = None
     ) -> T:
+        system_parts: list[str] = []
         typed_messages: list[MessageParam] = []
 
         for message in messages:
-            typed_messages.append(
-                {
-                    "role": message.role.value,
-                    "content": message.text,
-                }
-            )
+            if message.role == MessageRole.system:
+                system_parts.append(message.text)
+            else:
+                typed_messages.append(
+                    {
+                        "role": message.role.value,
+                        "content": message.text,
+                    }
+                )
 
         logger.info(
             "LLM request started",
@@ -51,7 +56,7 @@ class AnthropicLLMClient(LLMClient):
                 "event": "llm_request_started",
                 "model": self.model,
                 "messages_count": len(typed_messages),
-                "input_chars": sum(len(message["content"]) for message in typed_messages),
+                "input_chars": sum(len(message.text) for message in messages),
             },
         )
 
@@ -59,7 +64,9 @@ class AnthropicLLMClient(LLMClient):
         response = await self.client.messages.parse(
             model=self.model,
             max_tokens=self.max_tokens,
+            system="\n\n".join(system_parts) or NOT_GIVEN,
             messages=typed_messages,
+            output_format=response_model or NOT_GIVEN,
         )
         duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
 
@@ -73,6 +80,13 @@ class AnthropicLLMClient(LLMClient):
                 "stop_reason": response.stop_reason,
             },
         )
+
+        if response.parsed_output is None:
+            logger.error(
+                "LLM response could not be parsed",
+                extra={"event": "llm_response_not_parsed", "stop_reason": response.stop_reason},
+            )
+            raise ValueError("LLM response could not be parsed into the requested model")
 
         return response.parsed_output
 
