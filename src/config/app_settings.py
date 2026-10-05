@@ -10,6 +10,8 @@ class AppSettings(BaseSettings):
     llm_connect_timeout: float = 5.0
     llm_max_tokens: int = 1024
 
+    app_log_level: str = "INFO"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8"

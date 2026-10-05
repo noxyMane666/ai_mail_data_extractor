@@ -1,0 +1,37 @@
+{
+  "mail_01_urgent_full_contacts.txt": {
+    "company_name": "ООО «Вектор-Снаб»",
+    "contact_phone_number": "+74951234567",
+    "contact_email": "a.sokolova@vektor-snab.example",
+    "product_name": "центробежные насосы CNP-65",
+    "urgency": "high"
+  },
+  "mail_02_info_request_no_phone.txt": {
+    "company_name": null,
+    "contact_phone_number": null,
+    "contact_email": "igor.lebedev@mail.example",
+    "product_name": "мембрана ТехноДор Про 2.0",
+    "urgency": "low"
+  },
+  "mail_03_medium_deadline_phone_in_signature.txt": {
+    "company_name": "АО «Уралэнергомонтаж»",
+    "contact_phone_number": "+79125550102",
+    "contact_email": "d.korneev@uralenergo.example",
+    "product_name": "кабель ВВГнг-LS 3x2.5, кабель ВВГнг-LS 5x4",
+    "urgency": "medium"
+  },
+  "mail_04_minimal_no_company_no_product.txt": {
+    "company_name": null,
+    "contact_phone_number": null,
+    "contact_email": null,
+    "product_name": null,
+    "urgency": "low"
+  },
+  "mail_05_mixed_contacts_injection.txt": {
+    "company_name": "СХПК «Заря»",
+    "contact_phone_number": "+79270001122",
+    "contact_email": "a.petrov@agro-kurgan.example",
+    "product_name": "трактор МТЗ-82, запчасти (фильтры, ремни, колодки)",
+    "urgency": "high"
+  }
+}
