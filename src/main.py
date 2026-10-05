@@ -35,9 +35,9 @@ def create_app_lifespan(config: AppSettings):
     return app_lifespan
 
 def create_app() -> FastAPI:
-    setup_logging()
-
     config = AppSettings()
+    setup_logging(config.app_log_level)
+
     app = FastAPI(lifespan=create_app_lifespan(config))
 
     register_logging_middleware(app)

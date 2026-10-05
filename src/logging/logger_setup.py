@@ -1,6 +1,5 @@
 import logging
 import logging.config
-import os
 from datetime import datetime, timezone
 
 from src.logging.logging_context import RequestContext
@@ -92,9 +91,9 @@ class CompactFormatter(logging.Formatter):
         return message
 
 
-def setup_logging() -> logging.Logger:
+def setup_logging(log_level: str = "INFO") -> logging.Logger:
     logging.setLoggerClass(SafeExtraLogger)
-    log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+    log_level = log_level.upper()
 
     logging.config.dictConfig({
         "version": 1,

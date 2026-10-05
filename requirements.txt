@@ -1,0 +1,7 @@
+anthropic==1.11.0
+brotli==1.2.0
+fastapi==0.115.12
+httpx2==2.13.1
+pydantic==2.10.3
+pydantic-settings==2.6.1
+uvicorn==0.34.3
