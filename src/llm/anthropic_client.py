@@ -1,3 +1,5 @@
+import logging
+import time
 from typing import TypeVar
 
 import httpx2
@@ -10,6 +12,8 @@ from src.llm.llm_message import LLLMessage
 
 
 T = TypeVar("T")
+
+logger = logging.getLogger(__name__)
 
 
 class AnthropicLLMClient(LLMClient):
@@ -41,10 +45,33 @@ class AnthropicLLMClient(LLMClient):
                 }
             )
 
+        logger.info(
+            "LLM request started",
+            extra={
+                "event": "llm_request_started",
+                "model": self.model,
+                "messages_count": len(typed_messages),
+                "input_chars": sum(len(message["content"]) for message in typed_messages),
+            },
+        )
+
+        start_time = time.perf_counter()
         response = await self.client.messages.parse(
             model=self.model,
             max_tokens=self.max_tokens,
             messages=typed_messages,
+        )
+        duration_ms = round((time.perf_counter() - start_time) * 1000, 2)
+
+        logger.info(
+            "LLM request completed",
+            extra={
+                "event": "llm_request_completed",
+                "duration_ms": duration_ms,
+                "input_tokens": response.usage.input_tokens,
+                "output_tokens": response.usage.output_tokens,
+                "stop_reason": response.stop_reason,
+            },
         )
 
         return response.parsed_output
