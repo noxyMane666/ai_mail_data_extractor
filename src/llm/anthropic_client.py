@@ -29,7 +29,7 @@ class AnthropicLLMClient(LLMClient):
     async def call(
         self,
         messages: list[LLLMessage],
-        response_model: type[T],
+        response_model: type[T] | None = None
     ) -> T:
         typed_messages: list[MessageParam] = []
 
@@ -45,7 +45,6 @@ class AnthropicLLMClient(LLMClient):
             model=self.model,
             max_tokens=self.max_tokens,
             messages=typed_messages,
-            output_format=response_model,
         )
 
         return response.parsed_output
