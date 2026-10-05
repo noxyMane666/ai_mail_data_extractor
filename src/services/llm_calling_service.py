@@ -1,6 +1,6 @@
 import logging
 
-from src.api.models import EmailExtractResponse
+from src.llm.answer_schemas.email_extraction_schema import ExtractedEmailData
 from src.llm.enums.message_roles import MessageRole
 from src.llm.interfaces import LLMClient
 from src.llm.llm_message import LLLMessage
@@ -13,7 +13,7 @@ class LLMCallingService:
     def __init__(self, llm_client: LLMClient):
         self._client = llm_client
 
-    async def extract_email_data(self, email_text: str) -> EmailExtractResponse:
+    async def extract_email_data(self, email_text: str) -> ExtractedEmailData:
         logger.info(
             "Email data extraction started",
             extra={"event": "extraction_started", "input_chars": len(email_text)},
@@ -29,7 +29,10 @@ class LLMCallingService:
             text=email_text
         )
 
-        result = await self._client.call([system_message, user_message])
+        result = await self._client.call(
+            [system_message, user_message],
+            response_model=ExtractedEmailData,
+        )
 
         logger.info(
             "Email data extraction completed",

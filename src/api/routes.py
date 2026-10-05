@@ -11,4 +11,5 @@ def register_routes(app):
             request: EmailExtractRequest,
             llm_calling_service: LLMCallingService = Depends(get_llm_calling_service)
     ) -> EmailExtractResponse:
-        return await llm_calling_service.extract_email_data(request.text)
+        extracted = await llm_calling_service.extract_email_data(request.text)
+        return EmailExtractResponse(**extracted.model_dump())
