@@ -4,6 +4,7 @@ from fastapi import FastAPI
 
 from src.api.routes import register_routes
 from src.config.app_settings import AppSettings
+from src.handlers.exception_handler import register_exception_handlers
 from src.llm.client_factory import create_llm_client
 from src.llm.enums.client_types import LLMClientTypes
 
@@ -29,4 +30,5 @@ def create_app() -> FastAPI:
     app = FastAPI(lifespan=create_app_lifespan(config))
 
     register_routes(app)
+    register_exception_handlers(app)
     return app
